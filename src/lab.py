@@ -1,6 +1,6 @@
 import numpy
 from numpy.random import random_integers as rand
-import matplotlib.pyplot as pyplot
+#import matplotlib.pyplot as pyplot
  
 def maze(width=80, height=50, complexity=1, density=1):
     # Only odd shapes
