@@ -41,7 +41,7 @@ for i in range(21):
 i=0
 for i in range(21):
 	for j in range(23):
-		if z[i][j] != False:
+		if z[i][j] == True:
 			worldMap[i][j]=2
 		else:
 			worldMap[i][j]=0	
@@ -126,7 +126,7 @@ def main():
     t = time.clock() #time of current frame
     oldTime = 0. #time of previous frame
     pygame.mixer.init()
-    pygame.mixer.music.load("MuseUprising.mp3")
+    pygame.mixer.music.load("one_last_thrill.mp3")
     pygame.mixer.music.play(-1)
     size = w, h = 640,480
     pygame.init()
@@ -140,20 +140,20 @@ def main():
     f = pygame.font.SysFont(pygame.font.get_default_font(), 20)
     
     wm = worldManager.WorldManager(worldMap,sprite_positions, 20, 11.5, -1, 0, 0, .66)
-    
-    weapons = [Weapon("fist"),
-               Weapon("pistol"),
-               Weapon("shotgun"),
-               Weapon("dbshotgun"),
-               Weapon("chaingun"),
-               Weapon("plasma"),
-               Weapon("rocket"),
-               Weapon("bfg"),
-               Weapon("chainsaw")
-               ]
-    weapon_numbers = [K_1,K_2,K_3,K_4,K_5,K_6,K_7,K_8,K_0]
-    weapon = weapons[0]
-    
+
+#    weapons = [Weapon("fist"),
+#               Weapon("pistol"),
+#               Weapon("shotgun"),
+#               Weapon("dbshotgun"),
+#               Weapon("chaingun"),
+#               Weapon("plasma"),
+#               Weapon("rocket"),
+#               Weapon("bfg"),
+#               Weapon("chainsaw")
+#               ]
+#    weapon_numbers = [K_1,K_2,K_3,K_4,K_5,K_6,K_7,K_8,K_0]
+#    weapon = weapons[0]
+
     while(True):
         clock.tick(60)
         
@@ -166,7 +166,7 @@ def main():
         t = time.clock()
         text = f.render(str(clock.get_fps()), False, (255, 255, 0))
         screen.blit(text, text.get_rect(), text.get_rect())
-        weapon.draw(screen, t)
+        #weapon.draw(screen, t)
         pygame.display.flip()
 
         # speed modifiers
@@ -179,6 +179,7 @@ def main():
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     return
+		'''
                 elif event.key == K_SPACE:
                     #shoot
                     weapon.play()
@@ -189,7 +190,8 @@ def main():
                 if event.key == K_SPACE:
                     weapon.stop()
             else:
-                pass 
+                pass
+		''' 
         
         keys = pygame.key.get_pressed()
         if keys[K_UP]:
@@ -222,6 +224,8 @@ def main():
             wm.camera.planey = oldPlaneX * math.sin(rotSpeed) + wm.camera.planey * math.cos(rotSpeed)
 
 fps = 8
+
+'''
 class Weapon(object):
     
     def __init__(self, weaponName="shotgun", frameCount = 5):
@@ -255,6 +259,6 @@ class Weapon(object):
                 self.oldTime = time
         img = self.images[self.frame]
         surface.blit(img, (surface.get_width()/2 - img.get_width()/2, surface.get_height()-img.get_height()))
-            
+'''            
 if __name__ == '__main__':
     main()
