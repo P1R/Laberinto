@@ -45,8 +45,7 @@ for i in range(21):
 			worldMap[i][j]=2
 		else:
 			worldMap[i][j]=0	
-#print z
-#print worldMap
+print worldMap
 pyplot.figure(figsize=(10, 5))
 pyplot.imshow(z, cmap=pyplot.cm.binary, interpolation='nearest')
 pyplot.xticks([]), pyplot.yticks([])
@@ -79,7 +78,7 @@ worldMap =[
 '''
 
 sprite_positions=[
-  (20.5, 11.5, 2), #green light in front of playerstart
+  (20, 11.5, 3), #green light in front of playerstart
 ];
   #green lights in every room
 #  (18.5,4.5, 2),
@@ -131,28 +130,15 @@ def main():
     size = w, h = 640,480
     pygame.init()
     window = pygame.display.set_mode(size)
-    pygame.display.set_caption("Gh0stenstein")
+    pygame.display.set_caption("Laberinto")
     screen = pygame.display.get_surface()
     #pixScreen = pygame.surfarray.pixels2d(screen)
     pygame.mouse.set_visible(False)
     clock = pygame.time.Clock()
     
-    f = pygame.font.SysFont(pygame.font.get_default_font(), 20)
+    f = pygame.font.SysFont(pygame.font.get_default_font(), 18)
     
     wm = worldManager.WorldManager(worldMap,sprite_positions, 20, 11.5, -1, 0, 0, .66)
-
-#    weapons = [Weapon("fist"),
-#               Weapon("pistol"),
-#               Weapon("shotgun"),
-#               Weapon("dbshotgun"),
-#               Weapon("chaingun"),
-#               Weapon("plasma"),
-#               Weapon("rocket"),
-#               Weapon("bfg"),
-#               Weapon("chainsaw")
-#               ]
-#    weapon_numbers = [K_1,K_2,K_3,K_4,K_5,K_6,K_7,K_8,K_0]
-#    weapon = weapons[0]
 
     while(True):
         clock.tick(60)
@@ -171,7 +157,7 @@ def main():
 
         # speed modifiers
         moveSpeed = frameTime * 6.0 # the constant value is in squares / second
-        rotSpeed = frameTime * 2.0 # the constant value is in radians / second
+        rotSpeed = frameTime * 3.0 # the constant value is in radians / second
         
         for event in pygame.event.get(): 
             if event.type == QUIT: 
@@ -179,20 +165,27 @@ def main():
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     return
-		'''
-                elif event.key == K_SPACE:
-                    #shoot
-                    weapon.play()
-                elif event.key in weapon_numbers:
-                    weapon.stop()
-                    weapon = weapons[weapon_numbers.index(event.key)]
-            elif event.type == KEYUP:
-                if event.key == K_SPACE:
-                    weapon.stop()
-            else:
-                pass
-		''' 
-        
+        '''
+        moveX = wm.camera.x + wm.camera.dirx * moveSpeed
+        if(worldMap[int(moveX)][int(wm.camera.y)]==0 and worldMap[int(moveX + 0.1)][int(wm.camera.y)]==0):wm.camera.x += wm.camera.dirx * moveSpeed
+        moveY = wm.camera.y + wm.camera.diry * moveSpeed
+        if(worldMap[int(wm.camera.x)][int(moveY)]==0 and worldMap[int(wm.camera.x)][int(moveY + 0.1)]==0):wm.camera.y += wm.camera.diry * moveSpeed
+        '''
+
+        '''
+        print "camera moveX:".rstrip('\n')
+        type(moveX)
+        print "camera moveY:".rstrip('\n')
+        print moveY
+        print "camera dirx:".rstrip('\n')
+        print wm.camera.dirx
+        print "camera diry:".rstrip('\n')
+        print wm.camera.diry
+        print "camera planex:".rstrip('\n')
+        print wm.camera.planex
+        print "camera planey:".rstrip('\n')
+        print wm.camera.planey
+        '''
         keys = pygame.key.get_pressed()
         if keys[K_UP]:
             # move forward if no wall in front of you

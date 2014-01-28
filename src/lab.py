@@ -2,7 +2,7 @@ import numpy
 from numpy.random import random_integers as rand
 #import matplotlib.pyplot as pyplot
  
-def maze(width=80, height=50, complexity=1, density=1):
+def maze(width=80, height=50, complexity=.75, density=.75):
     # Only odd shapes
     shape = ((height // 2) * 2 + 1, (width // 2) * 2 +1)
     # Adjust complexity and density relative to maze size

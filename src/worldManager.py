@@ -11,6 +11,7 @@ class WorldManager(object):
               load_image(pygame.image.load("pics/items/barrel.png").convert(), False, colorKey = (0,0,0)),
               load_image(pygame.image.load("pics/items/pillar.png").convert(), False, colorKey = (0,0,0)),
               load_image(pygame.image.load("pics/items/greenlight.png").convert(), False, colorKey = (0,0,0)),
+              load_image(pygame.image.load("pics/items/meta.png").convert(), False, colorKey = (0,0,0)),
         ]
         
         self.background = None
@@ -200,7 +201,7 @@ class WorldManager(object):
 
 class Camera(object):
     def __init__(self,x,y,dirx,diry,planex,planey):
-        self.x = float(x)
+        self.x = float(x)-0.5 #Agregamos -0.5 para evitar bug en pared
         self.y = float(y)
         self.dirx = float(dirx)
         self.diry = float(diry)
