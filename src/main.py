@@ -43,8 +43,17 @@ for i in range(21):
 	for j in range(23):
 		if z[i][j] == True:
 			worldMap[i][j]=2
+			if i == 0:
+				worldMap[i][j]=5
+			if i == 20:
+				worldMap[i][j]=5
+			if j == 0:
+				worldMap[i][j]=5
+			if j== 22:
+				worldMap[i][j]=5
 		else:
-			worldMap[i][j]=0	
+			worldMap[i][j]=0
+
 print worldMap
 pyplot.figure(figsize=(10, 5))
 pyplot.imshow(z, cmap=pyplot.cm.binary, interpolation='nearest')
@@ -78,8 +87,9 @@ worldMap =[
 '''
 
 sprite_positions=[
-  (20, 11.5, 3), #green light in front of playerstart
+  (20, 11.5, 3), #Bandera de Metai
 ];
+#  (20, 11.5, 3), #green light in front of playerstart
   #green lights in every room
 #  (18.5,4.5, 2),
 #  (10.0,4.5, 2),
@@ -165,18 +175,7 @@ def main():
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     return
-        '''
-        moveX = wm.camera.x + wm.camera.dirx * moveSpeed
-        if(worldMap[int(moveX)][int(wm.camera.y)]==0 and worldMap[int(moveX + 0.1)][int(wm.camera.y)]==0):wm.camera.x += wm.camera.dirx * moveSpeed
-        moveY = wm.camera.y + wm.camera.diry * moveSpeed
-        if(worldMap[int(wm.camera.x)][int(moveY)]==0 and worldMap[int(wm.camera.x)][int(moveY + 0.1)]==0):wm.camera.y += wm.camera.diry * moveSpeed
-        '''
 
-        '''
-        print "camera moveX:".rstrip('\n')
-        type(moveX)
-        print "camera moveY:".rstrip('\n')
-        print moveY
         print "camera dirx:".rstrip('\n')
         print wm.camera.dirx
         print "camera diry:".rstrip('\n')
@@ -185,8 +184,37 @@ def main():
         print wm.camera.planex
         print "camera planey:".rstrip('\n')
         print wm.camera.planey
-        '''
-        keys = pygame.key.get_pressed()
+	print "rotSpeed:".rstrip('\n')
+	print rotSpeed
+	print "moveSpeed:".rstrip('\n')
+	print moveSpeed
+	keys = pygame.key.get_pressed()
+	rot = math.pi/2
+
+	
+	moveX = wm.camera.x + wm.camera.dirx * moveSpeed
+	if(worldMap[int(moveX)][int(wm.camera.y)]==0 and worldMap[int(moveX + 0.1)][int(wm.camera.y)]==0):wm.camera.x += wm.camera.dirx * moveSpeed
+	else:
+		pygame.time.delay(100)
+		oldDirX = wm.camera.dirx
+		wm.camera.dirx = wm.camera.dirx * math.cos(- rot) - wm.camera.diry * math.sin(- rot)
+		wm.camera.diry = oldDirX * math.sin(- rot) + wm.camera.diry * math.cos(- rot)
+		oldPlaneX = wm.camera.planex
+		wm.camera.planex = wm.camera.planex * math.cos(- rot) - wm.camera.planey * math.sin(- rot)
+		wm.camera.planey = oldPlaneX * math.sin(- rot) + wm.camera.planey * math.cos(- rot)
+
+	moveY = wm.camera.y + wm.camera.diry * moveSpeed
+	if(worldMap[int(wm.camera.x)][int(moveY)]==0 and worldMap[int(wm.camera.x)][int(moveY + 0.1)]==0):wm.camera.y += wm.camera.diry * moveSpeed
+	else:
+		pygame.time.delay(100)
+		oldDirX = wm.camera.dirx
+		wm.camera.dirx = wm.camera.dirx * math.cos(- rot) - wm.camera.diry * math.sin(- rot)
+		wm.camera.diry = oldDirX * math.sin(- rot) + wm.camera.diry * math.cos(- rot)
+		oldPlaneX = wm.camera.planex
+		wm.camera.planex = wm.camera.planex * math.cos(- rot) - wm.camera.planey * math.sin(- rot)
+		wm.camera.planey = oldPlaneX * math.sin(- rot) + wm.camera.planey * math.cos(- rot)
+
+'''		
         if keys[K_UP]:
             # move forward if no wall in front of you
             moveX = wm.camera.x + wm.camera.dirx * moveSpeed
@@ -215,43 +243,9 @@ def main():
             oldPlaneX = wm.camera.planex
             wm.camera.planex = wm.camera.planex * math.cos(rotSpeed) - wm.camera.planey * math.sin(rotSpeed)
             wm.camera.planey = oldPlaneX * math.sin(rotSpeed) + wm.camera.planey * math.cos(rotSpeed)
-
-fps = 8
-
 '''
-class Weapon(object):
-    
-    def __init__(self, weaponName="shotgun", frameCount = 5):
-        self.images = []
-        self.loop = False
-        self.playing = False
-        self.frame = 0
-        self.oldTime = 0
-        for i in range(frameCount):
-            img = pygame.image.load("pics/weapons/%s%s.bmp" % (weaponName, i+1)).convert()
-            img = pygame.transform.scale2x(img)
-            img = pygame.transform.scale2x(img)
-            img.set_colorkey(img.get_at((0,0)))
-            self.images.append(img)
-    def play(self):
-        self.playing = True
-        self.loop = True
-    def stop(self):
-        self.playing = False
-        self.loop = False
-    def draw(self, surface, time):
-        if(self.playing or self.frame > 0):
-            if(time > self.oldTime + 1./fps):
-                self.frame = (self.frame+1) % len(self.images)
-                if self.frame == 0: 
-                    if self.loop:
-                        self.frame = 1
-                    else:
-                        self.playing = False
-                        
-                self.oldTime = time
-        img = self.images[self.frame]
-        surface.blit(img, (surface.get_width()/2 - img.get_width()/2, surface.get_height()-img.get_height()))
-'''            
+fps =8
+
+         
 if __name__ == '__main__':
     main()
