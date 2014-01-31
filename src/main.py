@@ -6,39 +6,11 @@ import time
 import lab
 import matplotlib.pyplot as pyplot
 
-#worldMap =[
-#  [8,8,8,8,8,8,8,8,8,8,8,4,4,6,4,4,6,4,6,4,4,4,6,4],
-#  [8,0,0,0,0,0,0,0,0,0,8,4,0,0,0,0,0,0,0,0,0,0,0,4],
-#  [8,0,3,3,0,0,0,0,0,8,8,4,0,0,0,0,0,0,0,0,0,0,0,6],
-#  [8,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
-#  [8,0,3,3,0,0,0,0,0,8,8,4,0,0,0,0,0,0,0,0,0,0,0,4],
-#  [8,0,0,0,0,0,0,0,0,0,8,4,0,0,0,0,0,6,6,6,0,6,4,6],
-#  [8,8,8,8,0,8,8,8,8,8,8,4,4,4,4,4,4,6,0,0,0,0,0,6],
-#  [7,7,7,7,0,7,7,7,7,0,8,0,8,0,8,0,8,4,0,4,0,6,0,6],
-#  [7,7,0,0,0,0,0,0,7,8,0,8,0,8,0,8,8,6,0,0,0,0,0,6],
-#  [7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,6,0,0,0,0,0,4],
-#  [7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,6,0,6,0,6,0,6],
-#  [7,7,0,0,0,0,0,0,7,8,0,8,0,8,0,8,8,6,4,6,0,6,6,6],
-#  [7,7,7,7,0,7,7,7,7,8,8,4,0,6,8,4,8,3,3,3,0,3,3,3],
-#  [2,2,2,2,0,2,2,2,2,4,6,4,0,0,6,0,6,3,0,0,0,0,0,3],
-#  [2,2,0,0,0,0,0,2,2,4,0,0,0,0,0,0,4,3,0,0,0,0,0,3],
-#  [2,0,0,0,0,0,0,0,2,4,0,0,0,0,0,0,4,3,0,0,0,0,0,3],
-#  [1,0,0,0,0,0,0,0,1,4,4,4,4,4,6,0,6,3,3,0,0,0,3,3],
-#  [2,0,0,0,0,0,0,0,2,2,2,1,2,2,2,6,6,0,0,5,0,5,0,5],
-#  [2,2,0,0,0,0,0,2,2,2,0,0,0,2,2,0,5,0,5,0,0,0,5,5],
-#  [2,0,0,0,0,0,0,0,2,0,0,0,0,0,2,5,0,5,0,5,0,5,0,5],
-#  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5],
-#  [2,0,0,0,0,0,0,0,2,0,0,0,0,0,2,5,0,5,0,5,0,5,0,5],
-#  [2,2,0,0,0,0,0,2,2,2,0,0,0,2,2,0,5,0,5,0,0,0,5,5],
-#  [2,2,2,2,1,2,2,2,2,2,2,1,2,2,2,5,5,5,5,5,5,5,5,5]
-#];
-
-z=lab.maze(23,21)
+z,Arriba=lab.maze(23,21)
 worldMap=[None]*21
 for i in range(21):
 	worldMap[i]=[None]*23
 
-i=0
 for i in range(21):
 	for j in range(23):
 		if z[i][j] == True:
@@ -55,6 +27,10 @@ for i in range(21):
 			worldMap[i][j]=0
 
 print worldMap
+print "Z[0,".rstrip('\n')
+print Arriba
+print "]".rstrip('\n')
+
 pyplot.figure(figsize=(10, 5))
 pyplot.imshow(z, cmap=pyplot.cm.binary, interpolation='nearest')
 pyplot.xticks([]), pyplot.yticks([])
@@ -87,7 +63,7 @@ worldMap =[
 '''
 
 sprite_positions=[
-  (20, 11.5, 3), #Bandera de Metai
+  (.5, Arriba+.5 , 3), #Bandera de Metai
 ];
 #  (20, 11.5, 3), #green light in front of playerstart
   #green lights in every room
@@ -176,6 +152,8 @@ def main():
                 if event.key == K_ESCAPE:
                     return
 
+			
+        
         print "camera dirx:".rstrip('\n')
         print wm.camera.dirx
         print "camera diry:".rstrip('\n')
@@ -184,14 +162,14 @@ def main():
         print wm.camera.planex
         print "camera planey:".rstrip('\n')
         print wm.camera.planey
-	print "rotSpeed:".rstrip('\n')
-	print rotSpeed
-	print "moveSpeed:".rstrip('\n')
-	print moveSpeed
+	print "valor x:".rstrip('\n')
+	print wm.camera.x
+	print "valor y:".rstrip('\n')
+	print wm.camera.y
+	
 	keys = pygame.key.get_pressed()
 	rot = math.pi/2
-
-	
+	'''	
 	moveX = wm.camera.x + wm.camera.dirx * moveSpeed
 	if(worldMap[int(moveX)][int(wm.camera.y)]==0 and worldMap[int(moveX + 0.1)][int(wm.camera.y)]==0):wm.camera.x += wm.camera.dirx * moveSpeed
 	else:
@@ -213,8 +191,8 @@ def main():
 		oldPlaneX = wm.camera.planex
 		wm.camera.planex = wm.camera.planex * math.cos(- rot) - wm.camera.planey * math.sin(- rot)
 		wm.camera.planey = oldPlaneX * math.sin(- rot) + wm.camera.planey * math.cos(- rot)
+	'''
 
-'''		
         if keys[K_UP]:
             # move forward if no wall in front of you
             moveX = wm.camera.x + wm.camera.dirx * moveSpeed
@@ -243,7 +221,7 @@ def main():
             oldPlaneX = wm.camera.planex
             wm.camera.planex = wm.camera.planex * math.cos(rotSpeed) - wm.camera.planey * math.sin(rotSpeed)
             wm.camera.planey = oldPlaneX * math.sin(rotSpeed) + wm.camera.planey * math.cos(rotSpeed)
-'''
+
 fps =8
 
          
