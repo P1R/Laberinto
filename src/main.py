@@ -106,6 +106,31 @@ def load_image(image, darken, colorKey = None):
         ret.append(s)
     return ret
 
+#def search(x, y):
+	#if x,y == 1.5, Arriba+.5:
+		#print 'found at %d,%d' % (x, y)
+		#print "GANADOR!"
+		#return True
+	#elif grid[x][y] == 1:
+		#print 'wall at %d,%d' % (x, y)
+		#return False
+	#elif grid[x][y] == 3:
+		#print 'visited at %d,%d' % (x, y)
+		#return False
+	#print 'visiting %d,%d' % (x, y)
+	 
+	## mark as visited
+	#grid[x][y] = 3
+	 
+	## explore neighbors clockwise starting by the one on the right
+	#if ((x < len(grid)-1 and search(x+1, y))
+	#or (y > 0 and search(x, y-1))
+	#or (x > 0 and search(x-1, y))
+	#or (y < len(grid)-1 and search(x, y+1))):
+		#return True
+	 
+	#return False
+	
 def main():
   
     t = time.clock() #time of current frame
@@ -125,6 +150,8 @@ def main():
     f = pygame.font.SysFont(pygame.font.get_default_font(), 18)
     
     wm = worldManager.WorldManager(worldMap,sprite_positions, 20, 11.5, -1, 0, 0, .66)
+    
+    print worldMap
 
     while(True):
         clock.tick(60)
@@ -151,78 +178,110 @@ def main():
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     return
-
-			
-        
-        print "camera dirx:".rstrip('\n')
-        print wm.camera.dirx
-        print "camera diry:".rstrip('\n')
-        print wm.camera.diry
-        print "camera planex:".rstrip('\n')
-        print wm.camera.planex
-        print "camera planey:".rstrip('\n')
-        print wm.camera.planey
-	print "valor x:".rstrip('\n')
-	print wm.camera.x
-	print "valor y:".rstrip('\n')
-	print wm.camera.y
-	
+                    
+        #~ print "camera dirx:".rstrip('\n')
+        #~ print wm.camera.dirx
+        #~ print "camera diry:".rstrip('\n')
+        #~ print wm.camera.diry
+        #~ print "camera planex:".rstrip('\n')
+        #~ print wm.camera.planex
+        #~ print "camera planey:".rstrip('\n')
+        #~ print wm.camera.planey
+		print "valor x:".rstrip('\n')
+		print wm.camera.x
+		print "valor y:".rstrip('\n')
+		print wm.camera.y
+		
 	keys = pygame.key.get_pressed()
-	rot = math.pi/2
-	'''	
-	moveX = wm.camera.x + wm.camera.dirx * moveSpeed
-	if(worldMap[int(moveX)][int(wm.camera.y)]==0 and worldMap[int(moveX + 0.1)][int(wm.camera.y)]==0):wm.camera.x += wm.camera.dirx * moveSpeed
-	else:
+	rot = math.pi/2 #generando angulo de giro a pi medios
+	move = 1 #generando tamaño de paso en 1 entero
+
+	if keys[K_UP]:
 		pygame.time.delay(100)
+		# move forward if no wall in front of you
+		moveX = wm.camera.x + wm.camera.dirx * move
+		if(worldMap[int(moveX)][int(wm.camera.y)]==0 and worldMap[int(moveX + 0.1)][int(wm.camera.y)]==0):wm.camera.x += wm.camera.dirx * move
+		moveY = wm.camera.y + wm.camera.diry * move
+		if(worldMap[int(wm.camera.x)][int(moveY)]==0 and worldMap[int(wm.camera.x)][int(moveY + 0.1)]==0):wm.camera.y += wm.camera.diry * move
+	if keys[K_DOWN]:
+		pygame.time.delay(100)
+		# move backwards if no wall behind you
+		if(worldMap[int(wm.camera.x - wm.camera.dirx * move)][int(wm.camera.y)] == 0):wm.camera.x -= wm.camera.dirx * move
+		if(worldMap[int(wm.camera.x)][int(wm.camera.y - wm.camera.diry * move)] == 0):wm.camera.y -= wm.camera.diry * move
+	if (keys[K_RIGHT] and not keys[K_DOWN]) or (keys[K_LEFT] and keys[K_DOWN]):
+		pygame.time.delay(100)
+		# rotate to the right
+		# both camera direction and camera plane must be rotated
 		oldDirX = wm.camera.dirx
 		wm.camera.dirx = wm.camera.dirx * math.cos(- rot) - wm.camera.diry * math.sin(- rot)
 		wm.camera.diry = oldDirX * math.sin(- rot) + wm.camera.diry * math.cos(- rot)
 		oldPlaneX = wm.camera.planex
 		wm.camera.planex = wm.camera.planex * math.cos(- rot) - wm.camera.planey * math.sin(- rot)
 		wm.camera.planey = oldPlaneX * math.sin(- rot) + wm.camera.planey * math.cos(- rot)
-
-	moveY = wm.camera.y + wm.camera.diry * moveSpeed
-	if(worldMap[int(wm.camera.x)][int(moveY)]==0 and worldMap[int(wm.camera.x)][int(moveY + 0.1)]==0):wm.camera.y += wm.camera.diry * moveSpeed
-	else:
-		pygame.time.delay(100)
+	if (keys[K_LEFT] and not keys[K_DOWN]) or (keys[K_RIGHT] and keys[K_DOWN]):
+		pygame.time.delay(100) 
+		# rotate to the left
+		# both camera direction and camera plane must be rotated
 		oldDirX = wm.camera.dirx
-		wm.camera.dirx = wm.camera.dirx * math.cos(- rot) - wm.camera.diry * math.sin(- rot)
-		wm.camera.diry = oldDirX * math.sin(- rot) + wm.camera.diry * math.cos(- rot)
+		wm.camera.dirx = wm.camera.dirx * math.cos(rot) - wm.camera.diry * math.sin(rot)
+		wm.camera.diry = oldDirX * math.sin(rot) + wm.camera.diry * math.cos(rot)
 		oldPlaneX = wm.camera.planex
-		wm.camera.planex = wm.camera.planex * math.cos(- rot) - wm.camera.planey * math.sin(- rot)
-		wm.camera.planey = oldPlaneX * math.sin(- rot) + wm.camera.planey * math.cos(- rot)
-	'''
+		wm.camera.planex = wm.camera.planex * math.cos(rot) - wm.camera.planey * math.sin(rot)
+		wm.camera.planey = oldPlaneX * math.sin(rot) + wm.camera.planey * math.cos(rot)
+		
+	#moveX = wm.camera.x + wm.camera.dirx * moveSpeed
+	#if(worldMap[int(moveX)][int(wm.camera.y)]==0 and worldMap[int(moveX + 0.1)][int(wm.camera.y)]==0):wm.camera.x += wm.camera.dirx * moveSpeed
+	#else:
+		#pygame.time.delay(100)
+		#oldDirX = wm.camera.dirx
+		#wm.camera.dirx = wm.camera.dirx * math.cos(- rot) - wm.camera.diry * math.sin(- rot)
+		#wm.camera.diry = oldDirX * math.sin(- rot) + wm.camera.diry * math.cos(- rot)
+		#oldPlaneX = wm.camera.planex
+		#wm.camera.planex = wm.camera.planex * math.cos(- rot) - wm.camera.planey * math.sin(- rot)
+		#wm.camera.planey = oldPlaneX * math.sin(- rot) + wm.camera.planey * math.cos(- rot)
 
-        if keys[K_UP]:
-            # move forward if no wall in front of you
-            moveX = wm.camera.x + wm.camera.dirx * moveSpeed
-            if(worldMap[int(moveX)][int(wm.camera.y)]==0 and worldMap[int(moveX + 0.1)][int(wm.camera.y)]==0):wm.camera.x += wm.camera.dirx * moveSpeed
-            moveY = wm.camera.y + wm.camera.diry * moveSpeed
-            if(worldMap[int(wm.camera.x)][int(moveY)]==0 and worldMap[int(wm.camera.x)][int(moveY + 0.1)]==0):wm.camera.y += wm.camera.diry * moveSpeed
-        if keys[K_DOWN]:
-            # move backwards if no wall behind you
-            if(worldMap[int(wm.camera.x - wm.camera.dirx * moveSpeed)][int(wm.camera.y)] == 0):wm.camera.x -= wm.camera.dirx * moveSpeed
-            if(worldMap[int(wm.camera.x)][int(wm.camera.y - wm.camera.diry * moveSpeed)] == 0):wm.camera.y -= wm.camera.diry * moveSpeed
-        if (keys[K_RIGHT] and not keys[K_DOWN]) or (keys[K_LEFT] and keys[K_DOWN]):
-            # rotate to the right
-            # both camera direction and camera plane must be rotated
-            oldDirX = wm.camera.dirx
-            wm.camera.dirx = wm.camera.dirx * math.cos(- rotSpeed) - wm.camera.diry * math.sin(- rotSpeed)
-            wm.camera.diry = oldDirX * math.sin(- rotSpeed) + wm.camera.diry * math.cos(- rotSpeed)
-            oldPlaneX = wm.camera.planex
-            wm.camera.planex = wm.camera.planex * math.cos(- rotSpeed) - wm.camera.planey * math.sin(- rotSpeed)
-            wm.camera.planey = oldPlaneX * math.sin(- rotSpeed) + wm.camera.planey * math.cos(- rotSpeed)
-        if (keys[K_LEFT] and not keys[K_DOWN]) or (keys[K_RIGHT] and keys[K_DOWN]): 
-            # rotate to the left
-            # both camera direction and camera plane must be rotated
-            oldDirX = wm.camera.dirx
-            wm.camera.dirx = wm.camera.dirx * math.cos(rotSpeed) - wm.camera.diry * math.sin(rotSpeed)
-            wm.camera.diry = oldDirX * math.sin(rotSpeed) + wm.camera.diry * math.cos(rotSpeed)
-            oldPlaneX = wm.camera.planex
-            wm.camera.planex = wm.camera.planex * math.cos(rotSpeed) - wm.camera.planey * math.sin(rotSpeed)
-            wm.camera.planey = oldPlaneX * math.sin(rotSpeed) + wm.camera.planey * math.cos(rotSpeed)
+	#moveY = wm.camera.y + wm.camera.diry * moveSpeed
+	#if(worldMap[int(wm.camera.x)][int(moveY)]==0 and worldMap[int(wm.camera.x)][int(moveY + 0.1)]==0):wm.camera.y += wm.camera.diry * moveSpeed
+	#else:
+		#pygame.time.delay(100)
+		#oldDirX = wm.camera.dirx
+		#wm.camera.dirx = wm.camera.dirx * math.cos(- rot) - wm.camera.diry * math.sin(- rot)
+		#wm.camera.diry = oldDirX * math.sin(- rot) + wm.camera.diry * math.cos(- rot)
+		#oldPlaneX = wm.camera.planex
+		#wm.camera.planex = wm.camera.planex * math.cos(- rot) - wm.camera.planey * math.sin(- rot)
+		#wm.camera.planey = oldPlaneX * math.sin(- rot) + wm.camera.planey * math.cos(- rot)
 
-fps =8
+
+	#if keys[K_UP]:
+		## move forward if no wall in front of you
+		#moveX = wm.camera.x + wm.camera.dirx * moveSpeed
+		#if(worldMap[int(moveX)][int(wm.camera.y)]==0 and worldMap[int(moveX + 0.1)][int(wm.camera.y)]==0):wm.camera.x += wm.camera.dirx * moveSpeed
+		#moveY = wm.camera.y + wm.camera.diry * moveSpeed
+		#if(worldMap[int(wm.camera.x)][int(moveY)]==0 and worldMap[int(wm.camera.x)][int(moveY + 0.1)]==0):wm.camera.y += wm.camera.diry * moveSpeed
+	#if keys[K_DOWN]:
+		## move backwards if no wall behind you
+		#if(worldMap[int(wm.camera.x - wm.camera.dirx * moveSpeed)][int(wm.camera.y)] == 0):wm.camera.x -= wm.camera.dirx * moveSpeed
+		#if(worldMap[int(wm.camera.x)][int(wm.camera.y - wm.camera.diry * moveSpeed)] == 0):wm.camera.y -= wm.camera.diry * moveSpeed
+	#if (keys[K_RIGHT] and not keys[K_DOWN]) or (keys[K_LEFT] and keys[K_DOWN]):
+		## rotate to the right
+		## both camera direction and camera plane must be rotated
+		#oldDirX = wm.camera.dirx
+		#wm.camera.dirx = wm.camera.dirx * math.cos(- rotSpeed) - wm.camera.diry * math.sin(- rotSpeed)
+		#wm.camera.diry = oldDirX * math.sin(- rotSpeed) + wm.camera.diry * math.cos(- rotSpeed)
+		#oldPlaneX = wm.camera.planex
+		#wm.camera.planex = wm.camera.planex * math.cos(- rotSpeed) - wm.camera.planey * math.sin(- rotSpeed)
+		#wm.camera.planey = oldPlaneX * math.sin(- rotSpeed) + wm.camera.planey * math.cos(- rotSpeed)
+	#if (keys[K_LEFT] and not keys[K_DOWN]) or (keys[K_RIGHT] and keys[K_DOWN]): 
+		## rotate to the left
+		## both camera direction and camera plane must be rotated
+		#oldDirX = wm.camera.dirx
+		#wm.camera.dirx = wm.camera.dirx * math.cos(rotSpeed) - wm.camera.diry * math.sin(rotSpeed)
+		#wm.camera.diry = oldDirX * math.sin(rotSpeed) + wm.camera.diry * math.cos(rotSpeed)
+		#oldPlaneX = wm.camera.planex
+		#wm.camera.planex = wm.camera.planex * math.cos(rotSpeed) - wm.camera.planey * math.sin(rotSpeed)
+		#wm.camera.planey = oldPlaneX * math.sin(rotSpeed) + wm.camera.planey * math.cos(rotSpeed)
+
+fps=8
 
          
 if __name__ == '__main__':
