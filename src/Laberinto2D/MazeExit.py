@@ -14,7 +14,6 @@ def maze(width=81, height=51, complexity=1, density=1):
     # Fill borders
     #Parte Superior
     Z[0, :] =1 
-
     #parte inferior
     Z[-1, :] = 1 
     #llenando laterales
@@ -36,16 +35,10 @@ def maze(width=81, height=51, complexity=1, density=1):
                     Z[y_ + (y - y_) // 2, x_ + (x - x_) // 2] = 1
                     x, y = x_, y_
     #seleccion de salida aleatoria en la parte superior para final
-    random_fin = randrange(0, len(Z[0,:]))
+    random_fin = randrange(1, len(Z[0,:])-1)
     Z[0,random_fin]=False
     #selecciona de entrada aleatoria en la parte inferior para inicio
-    random_start = randrange(0, len(Z[-1,:]))
+    random_start = randrange(1, len(Z[-1,:])-1)
     Z[-1,random_start]=False 
     
     return Z, random_start, random_fin
-
- 
-#pyplot.figure(figsize=(10, 5))
-#pyplot.imshow(maze(80, 40), cmap=pyplot.cm.binary, interpolation='nearest')
-#pyplot.xticks([]), pyplot.yticks([])
-#pyplot.show()
