@@ -194,7 +194,7 @@ def main():
 		
 	keys = pygame.key.get_pressed()
 	rot = math.pi/2 #generando angulo de giro a pi medios
-	move = 1 #generando tamaño de paso en 1 entero
+	move = 1 #generando tamanio de paso en 1 entero
 
 	if keys[K_UP]:
 		pygame.time.delay(100)
